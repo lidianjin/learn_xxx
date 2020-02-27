@@ -13,8 +13,12 @@ def login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        print(username, password)
-        return redirect('/index/')
+        # 用户名和密码都不为空
+        if username.strip() and password:
+            # 用户名字符合法性验证
+            # 密码长度验证
+            # 其他验证...
+            return redirect('/index/')
     return render(request, 'login/login.html')
 
 
