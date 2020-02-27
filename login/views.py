@@ -18,7 +18,7 @@ def login(request):
         message = '请检查填写的内容'
         if login_form.is_valid():
             username = login_form.cleaned_data.get('username')
-            password = login_form.changed_data.get('password')
+            password = login_form.cleaned_data.get('password')
             try:
                 user = models.User.objects.get(name=username)
             except:
