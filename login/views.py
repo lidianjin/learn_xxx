@@ -13,6 +13,9 @@ def index(request):
 
 def login(request):
     """登录"""
+    # 不允许用户重复登录
+    if request.session.get('is_login', None):
+        return redirect('index/')
     if request.method == 'POST':
         login_form = forms.UserForm(request.POST)
         message = '请检查填写的内容'
@@ -26,6 +29,10 @@ def login(request):
                 return render(request, 'login/login.html', locals())
 
             if user.password == password:
+                # 保存用户信息
+                request.session['is_login'] = True
+                request.session['user_id'] = user.id
+                request.session['user_name'] = username
                 return redirect('/index/')
             else:
                 message = '密码不正确'
