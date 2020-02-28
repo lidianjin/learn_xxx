@@ -52,7 +52,7 @@ def register(request):
         return redirect('/index/')
 
     if request.method == 'POST':
-        register_form = forms.RegisterForm(register.POST)
+        register_form = forms.RegisterForm(request.POST)
         message = '请检查填写的内容'
         if register_form.is_valid():
             username = register_form.cleaned_data.get('username')
