@@ -47,6 +47,48 @@ def login(request):
 
 def register(request):
     """注册"""
+    # 不允许已登录用户注册
+    if request.session.get('is_login', None):
+        return redirect('/index/')
+
+    if request.method == 'POST':
+        register_form = forms.RegisterForm(register.POST)
+        message = '请检查填写的内容'
+        if register_form.is_valid():
+            username = register_form.cleaned_data.get('username')
+            password1 = register_form.cleaned_data.get('password1')
+            password2 = register_form.cleaned_data.get('password2')
+            email = register_form.cleaned_data.get('email')
+            sex = register_form.cleaned_data.get('sex')
+
+            if password1 != password2:
+                message = '两次输入的密码不同'
+                return render(request, 'login/register.html', locals())
+            else:
+                some_name_user = models.User.objects.filter(name=username)
+                if some_name_user:
+                    message = '用户名已存在'
+                    return render(request, 'login/register.html', locals())
+                some_email_user = models.User.objects.filter(email=email)
+                if some_email_user:
+                    message = '邮箱已被注册'
+                    return render(request, 'login/register.html', locals())
+
+            # 保存新注册用户信息
+            new_user = models.User()
+            new_user.name = username
+            new_user.password = password1
+            new_user.email = email
+            new_user.sex = sex
+            new_user.save()
+
+            return redirect('/login/')
+        else:
+            # 表单无效，请检查填写的内容
+            return render(request, 'login/register.html', locals())
+
+    # 对于非POST方法发送数据时，比如GET方法请求页面，返回空的表单，让用户可以填入数据
+    register_form = forms.RegisterForm()
     return render(request, 'login/register.html')
 
 
