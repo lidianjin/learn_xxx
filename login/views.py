@@ -89,7 +89,7 @@ def register(request):
 
     # 对于非POST方法发送数据时，比如GET方法请求页面，返回空的表单，让用户可以填入数据
     register_form = forms.RegisterForm()
-    return render(request, 'login/register.html')
+    return render(request, 'login/register.html', locals())
 
 
 def logout(request):
