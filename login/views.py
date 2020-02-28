@@ -52,4 +52,13 @@ def register(request):
 
 def logout(request):
     """登出"""
+    # 本来没有登录，没有登出一说
+    if not request.session.get('is_login', None):
+        return redirect('/login/')
+    # 清空session
+    request.session.flush()
+    # 或者使用下面的方法
+    # del request.session['is_login']
+    # del request.session['user_id']
+    # del request.session['username']
     return redirect('/login/')
