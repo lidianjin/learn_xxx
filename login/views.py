@@ -40,7 +40,7 @@ def login(request):
                 message = '用户不存在'
                 return render(request, 'login/login.html', locals())
 
-            if user.password == password:
+            if user.password == hash_code(password):
                 # 保存用户信息
                 request.session['is_login'] = True
                 request.session['user_id'] = user.id
@@ -89,7 +89,7 @@ def register(request):
             # 保存新注册用户信息
             new_user = models.User()
             new_user.name = username
-            new_user.password = password1
+            new_user.password = hash_code(password1)
             new_user.email = email
             new_user.sex = sex
             new_user.save()
