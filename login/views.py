@@ -1,3 +1,5 @@
+import hashlib
+
 from django.shortcuts import render
 from django.shortcuts import redirect
 
@@ -5,6 +7,16 @@ from . import models
 from . import forms
 
 # Create your views here.
+def hash_code(password, salt='Friday'):
+    """hash加密密码"""
+    # 加点盐
+    password += salt
+    # 注意加密后的密码长度
+    h = hashlib.sha256()
+    # 只接受bytes类型
+    h.update(password.encode())
+    return h.hexdigest()
+
 
 def index(request):
     """主页"""
