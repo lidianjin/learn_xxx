@@ -124,8 +124,8 @@ def register(request):
             new_user.save()
 
             # 邮箱确认
-            code =
-            return redirect('/login/')
+            code = make_confirm_string(new_user)
+            return render(request, 'login/confirm.html', locals())
         else:
             # 表单无效，请检查填写的内容
             return render(request, 'login/register.html', locals())
