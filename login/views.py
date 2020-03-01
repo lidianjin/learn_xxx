@@ -125,6 +125,8 @@ def register(request):
 
             # 邮箱确认
             code = make_confirm_string(new_user)
+            send_mail(email, code)
+            message = '请前往邮箱进行确认'
             return render(request, 'login/confirm.html', locals())
         else:
             # 表单无效，请检查填写的内容
