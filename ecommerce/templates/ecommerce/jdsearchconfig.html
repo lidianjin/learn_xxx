@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>京东商品搜索参数配置</title>
+    <script src="{% static 'ecommerce/css/script.js' %}"></script>
+</head>
+<body>
+    <h1>京东商品搜索参数配置</h1>
+    <form action="/ecommerce/jdsearchconfig/" method="post">
+        {% if message %}
+            <div>{{ message }}</div>
+        {% endif %}
+
+        {% csrf_token %}
+
+        <div>
+            {{ search_config_form.keyword.label_tag }}
+            {{ search_config_form.keyword }}
+        </div>
+        <div>
+            {{ search_config_form.page.label_tag }}
+            {{ search_config_form.page }}
+        </div>
+        <div>
+            <button type="submit">启动本地采集</button>
+            <button type="submit">启动云采集</button>
+        </div>
+    </form>
+</body>
+</html>

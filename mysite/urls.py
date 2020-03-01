@@ -27,4 +27,5 @@ urlpatterns = [
     path('logout/', views.logout),
     path('confirm/', views.user_confirm),
     path('captcha/', include('captcha.urls')),
+    path('ecommerce/', include('ecommerce.urls')),
 ]

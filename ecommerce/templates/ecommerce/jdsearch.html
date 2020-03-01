@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>京东商品搜索采集模板</title>
+    <script src="{% static 'ecommerce/css/script.js' %}"></script>
+</head>
+<body>
+    <div>
+        <button onclick="getTemplateInfo()">模板介绍</button>
+        <button onclick="getTemplateField()">采集字段预览</button>
+        <button onclick="getParameter()">采集参数预览</button>
+        <button onclick="getSampleData()">示例数据</button>
+        <a href="/ecommerce/jdsearchconfig/">
+            <button>立即使用</button>
+        </a>
+    </div>
+    <div id="template_data">
+
+    </div>
+</body>
+</html>

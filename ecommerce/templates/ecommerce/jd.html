@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>京东</title>
+    <!-- 自定义CSS -->
+    <link href="{% static 'ecommerce/css/style.css' %}" rel="stylesheet"/>
+</head>
+<body>
+    <h1>请选择采集模板</h1>
+    <div>
+        <a href="/ecommerce/jdsearch/">
+            <img src="/static/ecommerce/images/jd.png" alt="商品搜索_图片加载失败"><br />
+            商品搜索
+        </a>
+    </div>
+    <div>
+        <a href="/ecommerce/jddetail/">
+            <img src="/static/ecommerce/images/jd.png" alt="商品详情_图片加载失败"><br />
+            商品详情
+        </a>
+    </div>
+    <div>
+        <a href="/ecommerce/jdcomment/">
+            <img src="/static/ecommerce/images/jd.png" alt="商品评论_图片加载失败"><br />
+            商品评论
+        </a>
+    </div>
+</body>
+</html>
