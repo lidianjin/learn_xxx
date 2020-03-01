@@ -129,3 +129,5 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = 'dianjinli@sina.com'
 # 客户端授权码
 EMAIL_HOST_PASSWORD = 'e22d44a1cc2cf894'
+# 注册有效期天数
+CONFIRM_DAYS = 7
