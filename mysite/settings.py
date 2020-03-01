@@ -127,4 +127,5 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sina.com'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = 'dianjinli@sina.com'
-EMAIL_HOST_PASSWORD = 'sinapassword'
+# 客户端授权码
+EMAIL_HOST_PASSWORD = 'e22d44a1cc2cf894'
