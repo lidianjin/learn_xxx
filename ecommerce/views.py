@@ -1,7 +1,12 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.http import FileResponse
+
+# 创建Excel表格文件
+import xlwt
 
 from . import forms
+from . import crawler
 
 # Create your views here.
 
@@ -30,8 +35,10 @@ def jdsearchconfig(request):
             page = search_config_form.cleaned_data.get('page')
 
             # 已获取用户输入的参数，如何传递给爬虫
+            request.session['jdsearch_keyword'] = keyword
+            request.session['jdsearch_page'] = page
 
-            return render(request, 'ecommerce/jdsearchresult.html', locals())
+            return redirect('/ecommerce/jdsearchresult/')
         else:
             # 表单数据无效
             return render(request, 'ecommerce/jdsearchconfig.html', locals())
@@ -41,6 +48,70 @@ def jdsearchconfig(request):
     return render(request, 'ecommerce/jdsearchconfig.html', locals())
 
 
+def jdsearchexcel(jdsearch_data):
+    """
+    京东搜索生成excel表格文件
+    :param jdsearch_data:
+    :return:
+    """
+    # 新建工作簿
+    workbook = xlwt.Workbook(encoding='uft-8')
+    # 新建sheet
+    sheet = workbook.add_sheet('jdsearch_data')
+    # 添加行列数据
+    # 表头
+    thead = ['搜索关键词', '商家店名', '商品名称', '评价人数', '价格', '商品详情页链接', '页码', '店铺链接', '商品评论链接',
+             '封面图链接']
+    keys = ['keyword', 'product_store_name', 'product_name', 'product_comment_number', 'product_price',
+            'product_detail_url', 'page', 'product_store_url', 'product_comment_url', 'product_image_url']
+    for i in range(0, len(jdsearch_data)):
+        for j in range(0, len(thead)):
+            if i == 0:
+                sheet.write(i, j, thead[j])
+            else:
+                sheet.write(i, j, jdsearch_data[i - 1].get(keys[j]))
+    # xlsx格式打不开
+    workbook.save('ecommerce/data/jdsearch_data.xls')
+
+
 def jdsearchresult(request):
     """京东搜索采集预览"""
-    return render(request, 'ecommerce/jdsearchresult.html')
+    # 通过session取得keyword, page
+    keyword = request.session.get('jdsearch_keyword')
+    page = request.session.get('jdsearch_page')
+
+    # 调用爬虫，生成结果预览
+    jdsearch_data = crawler.jdSearchCrawler(keyword, page)
+    # 需要时间去获取数据
+
+    # xls
+    jdsearchexcel(jdsearch_data)
+    # 测试xls文件是否生成
+    try:
+        with open('ecommerce/data/jdsearch_data.xls', 'rb') as xls:
+            print('xls文件已生成')
+    except FileNotFoundError:
+        print('xls文件不存在')
+
+    return render(request, 'ecommerce/jdsearchresult.html', locals())
+
+
+def downloadfile(request):
+    """
+    xls文件下载
+    :param request:
+    :return:
+    """
+    # try:
+    #     with open('ecommerce/data/jdsearch_data.xls', 'rb') as file:
+    #         response = FileResponse(file)
+    # except FileNotFoundError:
+    #     print('文件下载时打开文件失败')
+
+    # ValueError: read of closed file
+    # django会关闭文件
+    file = open('ecommerce/data/jdsearch_data.xls', 'rb')
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="jdsearch_data.xls"'
+    return response

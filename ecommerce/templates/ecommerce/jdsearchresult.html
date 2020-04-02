@@ -1,11 +1,53 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>京东搜索采集预览</title>
+    <script src="{% static 'ecommerce/css/script.js' %}"></script>
 </head>
 <body>
-    <h1>{{ keyword }}</h1>
-    <h1>{{ page }}</h1>
+    <h1>搜索关键词：{{ keyword }}</h1>
+    <h1>页数：{{ page }}</h1>
+    <!--
+    <button type="button" onclick="downloadXlsFile()">导出数据Excel</button>
+    -->
+    <!-- HTML相对路径 -->
+    <!--
+    <a href="ecommerce/data/jdsearch_data.xls" download="jdsearch_data.xls">导出数据Excel</a>
+    -->
+    <a href="{% url 'ecommerce:download' %}" download="jdsearch_data.xls">导出数据Excel</a>
+    <table>
+        <thead>
+            <tr>
+                <th>搜索关键词</th>
+                <th>商家店名</th>
+                <th>商品名称</th>
+                <th>评价人数</th>
+                <th>价格</th>
+                <th>商品详情页链接</th>
+                <th>页码</th>
+                <th>店铺链接</th>
+                <th>商品评论链接</th>
+                <th>封面图链接</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in jdsearch_data %}
+            <tr>
+                <td>{{ product.keyword }}</td>
+                <td>{{ product.product_store_name }}</td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.product_comment_number }}</td>
+                <td>{{ product.product_price }}</td>
+                <td>{{ product.product_detail_url }}</td>
+                <td>{{ product.page }}</td>
+                <td>{{ product.product_store_url }}</td>
+                <td>{{ product.product_comment_url }}</td>
+                <td>{{ product.product_image_url }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>

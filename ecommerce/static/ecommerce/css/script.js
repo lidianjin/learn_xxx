@@ -90,3 +90,19 @@ function getSampleData() {
         </table>
         `;
 }
+
+
+// function downloadXlsFile() {
+//     // 下载xls文件
+//     window.open("ecommerce/data/jdsearch_data.xls");
+//     window.open("requirements.txt");
+//     alert("hello world");
+//     // var $eleForm = $("<form method='get'></form>");
+//     //
+// 	// $eleForm.attr("action","ecommerce/data/jdsearch_data.xls");
+//     //
+// 	// $(document.body).append($eleForm);
+//
+// 	//提交表单，实现下载
+// 	// $eleForm.submit();
+// }

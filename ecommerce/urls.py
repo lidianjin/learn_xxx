@@ -9,4 +9,5 @@ urlpatterns = [
     path('jdsearch/', views.jdsearch),
     path('jdsearchconfig/', views.jdsearchconfig),
     path('jdsearchresult/',views.jdsearchresult),
+    path('download/', views.downloadfile, name='download'),
 ]
