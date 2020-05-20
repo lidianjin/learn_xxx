@@ -9,7 +9,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <!-- 自定义CSS -->
-    <title>京东商品搜索采集模板</title>
+    <title>京东商品评论采集预览</title>
     <script src="{% static 'ecommerce/css/script.js' %}"></script>
 </head>
 <body>
@@ -33,23 +33,42 @@
       </div>
     </nav>
 
-    <br />
-
-    <div>
-        <button type="button" class="btn btn-primary" onclick="getTemplateInfo()">模板介绍</button>
-        <button type="button" class="btn btn-primary" onclick="getTemplateField()">采集字段预览</button>
-        <button type="button" class="btn btn-primary" onclick="getParameter()">采集参数预览</button>
-        <button type="button" class="btn btn-primary" onclick="getSampleData()">示例数据</button>
-        <a href="/ecommerce/jdsearchconfig/">
-            <button type="button" class="btn btn-success">立即使用</button>
-        </a>
-    </div>
-
-    <br />
-
-    <div id="template_data">
-
-    </div>
+    <h1>京东商品评论采集预览</h1>
+    <ul class="list-group">
+      <li class="list-group-item">输入网址：{{ site }}</li>
+      <li class="list-group-item">翻页次数：{{ page }}</li>
+    </ul>
+    <a href="{% url 'ecommerce:jdcommentdownload' %}" download="jdcomment_data.xls">
+        <button type="button" class="btn btn-primary">导出数据</button>
+    </a>
+    <table>
+        <thead>
+            <tr>
+                <th>用户名</th>
+                <th>评价星级</th>
+                <th>评价内容</th>
+                <th>评价时间</th>
+                <th>点赞数</th>
+                <th>评论数</th>
+                <th>页面标题</th>
+                <th>页面网址</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comment in jdcomment_data %}
+            <tr>
+                <td>{{ comment.username }}</td>
+                <td>{{ comment.star }}</td>
+                <td>{{ comment.content }}</td>
+                <td>{{ comment.time }}</td>
+                <td>{{ comment.thumb }}</td>
+                <td>{{ comment.comment }}</td>
+                <td>{{ comment.title }}</td>
+                <td>{{ comment.site }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

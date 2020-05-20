@@ -73,10 +73,14 @@ options.add_experimental_option('prefs', {'profile.managed_default_content_setti
 options.add_argument('--headless')
 browser = webdriver.Chrome(options=options)
 
+# 调试：不加载配置，性能优化
 # browser = webdriver.Chrome()
+
 wait = WebDriverWait(browser, 10)
 
 jdsearch_data = []
+jdcomment_data = []
+
 
 def jdSearchGetProducts(keyword, page):
     """
@@ -111,6 +115,37 @@ def jdSearchGetProducts(keyword, page):
         # 分布式采集数据库保存
         jdsearch_data.append(product)
 
+
+def jdCommentGetComments(site, page):
+    """
+    京东商品评论爬虫解析评论列表
+    :param site:
+    :param page:
+    :return:
+    """
+    # 使用XPath解析
+    html = etree.HTML(browser.page_source, etree.HTMLParser())
+    items = html.xpath('//*[@id="comment-0"]/div[position()<11]')
+    title = html.xpath('/html/body/div[6]/div/div[2]/div[1]/text()')[0].strip()
+    for item in items:
+        star = item.xpath('./div[2]/div[1]/@class')[0].strip()
+        star = int(star[-1])
+        star = star * '★'
+        comment = {
+            'username': item.xpath('./div[1]/div[1]/text()')[1].strip(),
+            'star': star,
+            'content': item.xpath('./div[2]/p/text()')[0],
+            'time': item.xpath('./div[2]/div[5]/div[1]/span[51]/text()'),
+            'thumb': item.xpath('./div[2]/div[5]/div[2]/a[2]/text()'),
+            'comment': item.xpath('./div[2]/div[5]/div[2]/a[3]/text()'),
+            'title': title,
+            # 页面网址
+            'site': site + '#comment'
+        }
+        print(comment)
+
+        # []暂存
+        jdcomment_data.append(comment)
 
 
 def document_body_scroll(scroll_height):
@@ -172,6 +207,38 @@ def jdSearchIndexPage(keyword, page):
         jdSearchIndexPage(keyword, page)
 
 
+def jdCommentIndexPage(site, page):
+    """
+    京东商品评论爬虫抓取索引页
+    :param site:
+    :param page:
+    :return:
+    """
+    print('正在爬取第', page, '页')
+    try:
+        browser.get(site)
+        browser.execute_script('window.scrollTo(0, document.body.scrollHeight)')
+        sleep(3)
+        # 直接用跳转的方式来爬取页面，而不是直接点击下一页
+        if page > 1:
+            xpath = '//*[@id="comment-0"]/div[13]/div/div/a[' + str(page) + ']'
+            next = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+            next.click()
+            browser.execute_script('window.scrollTo(0, document.body.scrollHeight)')
+            sleep(3)
+
+        scroll_height = int(browser.execute_script('return document.body.scrollHeight'))
+        # 模拟运行JavaScript，将进度条下拉到最底部，显示全部商品信息
+        document_body_scroll(scroll_height)
+        wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, '#comment-0 > div.com-table-footer > div > div > a.ui-page-curr'), str(page)))
+        # 前10个div为评论内容
+        wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="comment-0"]/div[position()<11]')))
+        jdCommentGetComments(site, page)
+
+    except TimeoutException:
+        jdCommentIndexPage(site, page)
+
+
 def jdSearchCrawler(keyword='华为', page=3):
     """
     京东商品搜索爬虫主函数
@@ -182,10 +249,28 @@ def jdSearchCrawler(keyword='华为', page=3):
     for i in range(1, page + 1):
         jdSearchIndexPage(keyword, i)
 
-    browser.close()
+    # browser.close()
 
     return jdsearch_data
 
 
+def jdCommentCrawler(site='https://item.jd.com/100008384344.html', page=3):
+    """
+    京东商品评论爬虫主函数
+    :param site:
+    :param page:
+    :return:
+    """
+    for i in range(1, page + 1):
+        jdCommentIndexPage(site, i)
+
+    # 连续启动2不同爬虫，浏览器关闭未启动
+    # todo: 关闭策略，或者自动释放
+    # browser.close()
+
+    return jdcomment_data
+
+
 if __name__ == "__main__":
-    jdSearchCrawler('华为', 2)
+    # jdSearchCrawler('华为', 2)
+    jdCommentCrawler('https://item.jd.com/100008384344.html', 2)

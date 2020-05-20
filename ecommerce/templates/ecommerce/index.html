@@ -1,16 +1,60 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Required meta tags -->
     <meta charset="UTF-8">
-    <title>首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- 上述meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 自定义CSS -->
+    <link href="{% static 'ecommerce/css/style.css' %}" rel="stylesheet"/>
+    <title>选择采集网址</title>
 </head>
 <body>
-    <h1>请选择采集模板</h1>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="/index/">基于Selenium的网络爬虫数据采集</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="/ecommerce/index/">首页</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="http://127.0.0.1:8000/admin/">用户管理</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout/">{{ request.session.user_name }}登出</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <h1>请选择采集网址</h1>
+    <!--
     <div>
         <a href="/ecommerce/jd/">
             <img src="/static/ecommerce/images/jd.png" alt="京东_图片加载失败"><br />
             京东
         </a>
     </div>
+    -->
+    <div class="card" style="width: 12rem;">
+      <img src="/static/ecommerce/images/jd.png" class="card-img-top" alt="京东_图片加载失败">
+      <div class="card-body">
+        <h5 class="card-title">京东</h5>
+        <p class="card-text">商品搜索、商品评论</p>
+        <a href="/ecommerce/jd/" class="btn btn-primary">查看详情</a>
+      </div>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!-- 以下三者的引用顺序是固定的 -->
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>

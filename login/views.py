@@ -52,7 +52,8 @@ def login(request):
     """登录"""
     # 不允许用户重复登录
     if request.session.get('is_login', None):
-        return redirect('index/')
+        # 重定向到首页，即选择采集网址页面
+        return redirect('/ecommerce/index/')
     if request.method == 'POST':
         login_form = forms.UserForm(request.POST)
         message = '请检查填写的内容'
@@ -74,7 +75,7 @@ def login(request):
                 request.session['is_login'] = True
                 request.session['user_id'] = user.id
                 request.session['user_name'] = username
-                return redirect('/index/')
+                return redirect('/ecommerce/index/')
             else:
                 message = '密码不正确'
                 return render(request, 'login/login.html', locals())
